@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import { Suspense, useState } from 'react';
+import { CelestialObject } from './components/CelestialObject';
+import { Canvas } from '@react-three/fiber';
+import data from './database/data';
 
-function App() {
+const CanvasContainer = styled.div`
+height: 100%;
+`
+
+function App() {  
+  const [celestialProps, setCelestialProps] = useState(data)
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <CanvasContainer>
+      <Canvas>
+        <Suspense fallback={null}>
+          <CelestialObject celestialProps={celestialProps}/>
+        </Suspense>
+      </Canvas>
+    </CanvasContainer>
+  )
 }
+
 
 export default App;
