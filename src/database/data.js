@@ -1,14 +1,18 @@
 export default [
     {
-        position: [0, 0, 4],
-        scale: 2
+        position: [0, 0, 0],
+        scale: 0.5
     },
     {
-        position: [5,0,2],
-        scale: 1
+        position: [1, 0, 0],
+        scale: 0.5
     },
     {
-        position: [-5,0,2],
-        scale: 1.5
+        position: [2, 0, 0],
+        scale: 0.5
+    },
+    {
+        position: [3, 0, 0],
+        scale: 0.5
     }
 ]
