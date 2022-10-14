@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import { useSpring, animated, config } from '@react-spring/three'
 import * as THREE from "three";
 
 import EarthDayMap from '../assets/textures/8k_earth_daymap.jpg'
@@ -9,14 +10,22 @@ import EarthSpecularMap from '../assets/textures/8k_earth_specular_map.jpg'
 import EarthCloudsMap from '../assets/textures/8k_earth_clouds.jpg'
 import { TextureLoader } from "three";
 
-export function Earth(props) {
+export function Earth({ isForging}) {
     const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
     TextureLoader,
     [EarthDayMap, EarthNormalMap, EarthSpecularMap, EarthCloudsMap]
     );
+    const [active, setActive] = useState(true);
+
+    const { position, scale } = useSpring({
+        position: active ? [0, 0, -2] : [-2, 0, -2],
+        scale: active ? 1.5 : 1,
+        config: config.wobbly,
+    });
+
+
     const earthRef = useRef();
     const cloudsRef = useRef();
-    
     useFrame(({ clock }) => {
     const elapsedTime = clock.getElapsedTime();
 
@@ -26,17 +35,9 @@ export function Earth(props) {
     
     return (
     <>
-        {/* <ambientLight intensity={1} /> */}
-        <pointLight color="#f6f3ea" position={[-2, 0, -.5]} intensity={1.2} />
-        <Stars
-        radius={300}
-        depth={60}
-        count={20000}
-        factor={7}
-        saturation={0}
-        fade={true}
-        />
-        <mesh ref={cloudsRef} position={[0, 0, -2]}>
+        <ambientLight intensity={1} />
+        <pointLight color="#f6f3ea" position={[1.2,0,-.5]} intensity={1.2} />
+        <animated.mesh scale={scale} onClick={() => setActive(!active)} ref={cloudsRef}  position={position}>
             <sphereGeometry args={[1.005, 32, 32]} />
             <meshPhongMaterial
             map={cloudsMap}
@@ -45,8 +46,8 @@ export function Earth(props) {
             transparent={true}
             side={THREE.DoubleSide}
         />
-        </mesh>
-        <mesh ref={earthRef} position={[0, 0, -2]}>
+        </animated.mesh>
+        <animated.mesh scale={scale} onClick={() => setActive(!active)} ref={earthRef} position={position}>
             <sphereGeometry args={[1, 32, 32]} />
             <meshPhongMaterial specularMap={specularMap} />
             <meshStandardMaterial
@@ -55,7 +56,7 @@ export function Earth(props) {
             metalness={0.4}
             roughness={0.7}
         />
-        </mesh>
+        </animated.mesh>
     </>
     );
 }

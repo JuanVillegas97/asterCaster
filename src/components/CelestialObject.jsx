@@ -1,56 +1,52 @@
-import {  useLoader } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import React, { useRef, useState, useEffect} from "react";
+import { useFrame } from "@react-three/fiber";
+import { OrbitControls, useTexture } from "@react-three/drei";
+import { useSpring, animated, config } from '@react-spring/three'
 
-import * as THREE from "three";
 
-import EarthDayMap from '../assets/textures/8k_earth_daymap.jpg'
-import EarthNormalMap from '../assets/textures/8k_earth_normal_map.jpg'
-import EarthSpecularMap from '../assets/textures/8k_earth_specular_map.jpg'
-import EarthCloudsMap from '../assets/textures/8k_earth_clouds.jpg'
-import { TextureLoader } from "three";
+import RockMap from '../assets/textures/aerial_rocks_02_diff_4k.jpg' //MAIN TEXTURE
+import DisplacementRockMap from '../assets/textures/aerial_rocks_02_disp_4k.jpg' //Displacement TEXTURE
+import AORockMap from '../assets/textures/aerial_rocks_02_arm_4k.jpg'
+import normalRockMap from '../assets/textures/aerial_rocks_02_nor_gl_4k.jpg'
 
-export function CelestialObject({celestialProps}) {
-    const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
-    TextureLoader,
-    [EarthDayMap, EarthNormalMap, EarthSpecularMap, EarthCloudsMap])
+//CHANEG WIDTH AND HEIGHT SEGMENTS
+
+import {  TextureLoader } from "three";
+
+export function CelestialObject({ isForging, color}) {
+    const earthRef = useRef();
+    useFrame(({ clock }) => {
+    const elapsedTime = clock.getElapsedTime();
+    earthRef.current.rotation.y = elapsedTime / 6;
+    });
+    
+    const [active, setActive] = useState(true);
+    const { position, scale } = useSpring({
+        position: active ?  [0, 0, -2] : [-2, 0, -2],
+        scale: active ? 1 : 1,
+        config: config.wobbly,
+    });
+
+    const celestialBodyTextures = useTexture({
+        map: RockMap,
+        displacementMap: DisplacementRockMap,
+        aoMap: AORockMap,
+        roughnessMap: AORockMap,
+        metalnessMap: AORockMap,
+        normalMap: normalRockMap,
+    })
 
     return (
-        <>
+    <>
         <ambientLight intensity={1} />
-        <Stars
-        radius={300} depth={60} count={20000} factor={7} saturation={0} fade={true}
-        />
-        <OrbitControls
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
-        zoomSpeed={0.6}
-        panSpeed={0.5}
-        rotateSpeed={0.4}
-        />
-        {celestialProps.map((celestial, index)=>{
-        const {position, scale} = celestial
-        return (
-            <group key={index}>
-            <mesh  position={position} scale={0.3} >
-                <sphereGeometry args={[1.005, 32, 32]}/>
-                <meshPhongMaterial 
-                    map={cloudsMap} opacity={0.4} depthWrite={true} transparent={true} side={THREE.DoubleSide}
-                />
-            </mesh>
-            <mesh  position={position} scale={0.3}>
-                <sphereGeometry args={[1, 32, 32]} />
-                <meshPhongMaterial specularMap={specularMap} />
-                <meshStandardMaterial
-                    map={colorMap} normalMap={normalMap} metalness={0.4} roughness={0.7}
-                />
-            </mesh>
-            </group>
-            )
-        })}
-        </>
+        <pointLight intensity={1} position={[0, 1,-1]}/>
+        <animated.mesh scale={scale} onClick={() => setActive(!active)} ref={earthRef} position={position}>
+            <sphereGeometry args={[1, 16, 16]} color={color} />
+            <meshPhongMaterial opacity={1} />
+            <meshStandardMaterial
+            {...celestialBodyTextures}
+            />
+        </animated.mesh>
+    </>
     );
 }
-
-
-{/* <pointLight color="#f6f3ea" position={[2, 0, 5]} intensity={1.2} /> */}
