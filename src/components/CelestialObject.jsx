@@ -7,7 +7,9 @@ import { Textures } from "../database/textures";
 
 //CHANEG WIDTH AND HEIGHT SEGMENTS
 
-export default function CelestialObject({isForging, texture, setTexture, displacementScale, setDisplacementScale, aoMapIntensity, setAoMapIntensity, roughness, setRoughness, metalness, setMetalness}) {
+export default function CelestialObject({localProps}) {
+    
+    const {name, texture, displacementScale, aoMapIntensity, roughness, metalness, color} = localProps
     const celestialBodyTextures = useTexture({
         map: Textures[texture].map,
         displacementMap: Textures[texture].displacementMap,

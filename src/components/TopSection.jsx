@@ -1,33 +1,22 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom"
+
 import styled, {keyframes} from "styled-components";
 import Button from '@mui/material/Button';
 
 
-export default function TopSection({isForging, setIsForging}) {
-    if(isForging){
-      return <>
-      <TopSectionContainer isForging={isForging} >
-      <Logo>Aster Caster</Logo>
-      <Slogan>Create you own astonomical objects</Slogan>
+export const TopSection = () => {
+  return <>
+  <TopSectionContainer>
+    <Logo>Aster Caster</Logo>
+    <Slogan>Create you own astonomical objects</Slogan>
       <Paragraph>
-        {/* {console.log(isForging)} */}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. In distinctio eos aspernatur eaque veritatis earum eum pariatur debitis neque repellendus provident, cum modi, rem tempora sequi, cupiditate voluptates reiciendis alias.
       </Paragraph>
-      <Button onClick={()=>setIsForging(!isForging)} variant="outlined" sx={{mt: 5}}>gO</Button>
+      <Link to="/CelestialForge"><Button variant="outlined" sx={{mt: 5}}>gO</Button></Link>
       </TopSectionContainer>
     </>
-    }else{
-      return <></>
-    }
-    
-  
 }
-
-const breatheAnimation = keyframes`
-  from {opacity: 1;}
-  to {opacity: 0;}
-`
-
 
 const TopSectionContainer = styled.div`
   position: absolute;
@@ -40,18 +29,8 @@ const TopSectionContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 13%;
+  opacity: .8;
   z-index: 99;
-  
-  animation-name: ${breatheAnimation};
-  
-  animation-iteration-count: 1;
-
-  ${({ isForging }) => !isForging && `
-  animation-duration: 5s;
-  animation-iteration-count: 2;
-  animation-fill-mode: forwards;
-  `}
-
 `;
 
 

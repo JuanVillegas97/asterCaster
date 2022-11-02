@@ -1,7 +1,6 @@
-import {  useLoader } from "@react-three/fiber";
+import {  useLoader,Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { TextureLoader } from "three";
-
 import * as THREE from "three";
 
 
@@ -11,13 +10,14 @@ import EarthSpecularMap from '../assets/textures/earth/8k_earth_specular_map.jpg
 import EarthCloudsMap from '../assets/textures/earth/8k_earth_clouds.jpg'
 
 
-export default function AllCelestials({celestialProps}) {
+export const AllCelestials = ({celestialProps}) => {
     const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
     TextureLoader,
     [EarthDayMap, EarthNormalMap, EarthSpecularMap, EarthCloudsMap])
 
     return (
         <>
+        <Canvas>
         <ambientLight intensity={1} />
         <Stars
         radius={300} depth={60} count={20000} factor={7} saturation={0} fade={true}
@@ -33,8 +33,6 @@ export default function AllCelestials({celestialProps}) {
         {/* Change the index for the id */}
         {celestialProps.map((celestial, index)=>{
         const {position, scale} = celestial
-        console.log(index+' '+position+' '+scale)
-
         return (
             <group key={index}>
             <mesh  position={position} scale={0.3} >
@@ -53,6 +51,7 @@ export default function AllCelestials({celestialProps}) {
             </group>
             )
         })}
+        </Canvas>
         </>
     );
 }
