@@ -1,23 +1,32 @@
-import React, { useRef, useState, useEffect} from "react";
+import React, { useRef, useState} from "react";
 import { useFrame } from "@react-three/fiber";
-import { OrbitControls, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import { useSpring, animated, config } from '@react-spring/three'
-
-
-import RockMap from '../assets/textures/aerial_rocks_02_diff_4k.jpg' //MAIN TEXTURE
-import DisplacementRockMap from '../assets/textures/aerial_rocks_02_disp_4k.jpg' //Displacement TEXTURE
-import AORockMap from '../assets/textures/aerial_rocks_02_arm_4k.jpg'
-import normalRockMap from '../assets/textures/aerial_rocks_02_nor_gl_4k.jpg'
+import {LinearEncoding} from "three";
+import { Textures } from "../database/textures";
 
 //CHANEG WIDTH AND HEIGHT SEGMENTS
 
-import {  TextureLoader } from "three";
+export default function CelestialObject({isForging, texture, setTexture, displacementScale, setDisplacementScale, aoMapIntensity, setAoMapIntensity, roughness, setRoughness, metalness, setMetalness}) {
+    const celestialBodyTextures = useTexture({
+        map: Textures[texture].map,
+        displacementMap: Textures[texture].displacementMap,
+        aoMap: Textures[texture].aoMap,
+        roughnessMap: Textures[texture].roughnessMap,
+        metalnessMap: Textures[texture].metalnessMap,
+        normalMap: Textures[texture].normalMap,
+    })
 
-export function CelestialObject({ isForging, color}) {
+    
     const earthRef = useRef();
+    const thorusRef = useRef();
     useFrame(({ clock }) => {
     const elapsedTime = clock.getElapsedTime();
     earthRef.current.rotation.y = elapsedTime / 6;
+    thorusRef.current.rotation.y = elapsedTime / 6;
+    thorusRef.current.rotation.x = elapsedTime / 6;
+
+
     });
     
     const [active, setActive] = useState(true);
@@ -27,26 +36,37 @@ export function CelestialObject({ isForging, color}) {
         config: config.wobbly,
     });
 
-    const celestialBodyTextures = useTexture({
-        map: RockMap,
-        displacementMap: DisplacementRockMap,
-        aoMap: AORockMap,
-        roughnessMap: AORockMap,
-        metalnessMap: AORockMap,
-        normalMap: normalRockMap,
-    })
-
-    return (
-    <>
-        <ambientLight intensity={1} />
-        <pointLight intensity={1} position={[0, 1,-1]}/>
-        <animated.mesh scale={scale} onClick={() => setActive(!active)} ref={earthRef} position={position}>
-            <sphereGeometry args={[1, 16, 16]} color={color} />
-            <meshPhongMaterial opacity={1} />
-            <meshStandardMaterial
-            {...celestialBodyTextures}
-            />
-        </animated.mesh>
+    
+    return <>
+    <ambientLight intensity={1} />
+    <pointLight intensity={1} position={[0, 0,0]}/>
+    <animated.mesh ref={thorusRef} position={[0, 0, -2]} scale={1}>
+        <torusGeometry args={[1.2,.01,50,200]}  />
+        <meshPhongMaterial opacity={1} />
+        <meshStandardMaterial
+        {...celestialBodyTextures}
+        normalMap-encoding={LinearEncoding}
+        transparent
+        displacementScale={displacementScale}
+        aoMapIntensity={aoMapIntensity}
+        roughness={roughness}
+        metalness={metalness}
+        metalnessMap={null}
+        />
+    </animated.mesh>
+    <animated.mesh  onClick={() => setActive(!active)} ref={earthRef} scale={.5} position={position}>
+        <sphereGeometry args={[1, 128, 128]} />
+        <meshPhongMaterial opacity={1} />
+        <meshStandardMaterial
+        {...celestialBodyTextures}
+        normalMap-encoding={LinearEncoding}
+        transparent
+        displacementScale={displacementScale}
+        aoMapIntensity={aoMapIntensity}
+        roughness={roughness}
+        metalness={metalness}
+        metalnessMap={null}
+        />
+    </animated.mesh>
     </>
-    );
 }

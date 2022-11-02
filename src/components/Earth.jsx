@@ -4,10 +4,10 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { useSpring, animated, config } from '@react-spring/three'
 import * as THREE from "three";
 
-import EarthDayMap from '../assets/textures/8k_earth_daymap.jpg'
-import EarthNormalMap from '../assets/textures/8k_earth_normal_map.jpg'
-import EarthSpecularMap from '../assets/textures/8k_earth_specular_map.jpg'
-import EarthCloudsMap from '../assets/textures/8k_earth_clouds.jpg'
+import EarthDayMap from '../assets/textures/earth/8k_earth_daymap.jpg'
+import EarthNormalMap from '../assets/textures/earth/8k_earth_normal_map.jpg'
+import EarthSpecularMap from '../assets/textures/earth/8k_earth_specular_map.jpg'
+import EarthCloudsMap from '../assets/textures/earth/8k_earth_clouds.jpg'
 import { TextureLoader } from "three";
 
 export function Earth({ isForging}) {
@@ -35,7 +35,7 @@ export function Earth({ isForging}) {
     
     return (
     <>
-        <ambientLight intensity={1} />
+        {/* <ambientLight intensity={1} /> */}
         <pointLight color="#f6f3ea" position={[1.2,0,-.5]} intensity={1.2} />
         <animated.mesh scale={scale} onClick={() => setActive(!active)} ref={cloudsRef}  position={position}>
             <sphereGeometry args={[1.005, 32, 32]} />

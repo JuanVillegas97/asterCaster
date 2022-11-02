@@ -3,14 +3,14 @@ import styled, {keyframes} from "styled-components";
 import Button from '@mui/material/Button';
 
 
-export function TopSection({isForging, setIsForging}) {
+export default function TopSection({isForging, setIsForging}) {
     if(isForging){
       return <>
       <TopSectionContainer isForging={isForging} >
       <Logo>Aster Caster</Logo>
       <Slogan>Create you own astonomical objects</Slogan>
       <Paragraph>
-        {console.log(isForging)}
+        {/* {console.log(isForging)} */}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. In distinctio eos aspernatur eaque veritatis earum eum pariatur debitis neque repellendus provident, cum modi, rem tempora sequi, cupiditate voluptates reiciendis alias.
       </Paragraph>
       <Button onClick={()=>setIsForging(!isForging)} variant="outlined" sx={{mt: 5}}>gO</Button>
@@ -23,10 +23,10 @@ export function TopSection({isForging, setIsForging}) {
   
 }
 
-// const breatheAnimation = keyframes`
-//   from {opacity: 1;}
-//   to {opacity: 0;}
-// `
+const breatheAnimation = keyframes`
+  from {opacity: 1;}
+  to {opacity: 0;}
+`
 
 
 const TopSectionContainer = styled.div`
@@ -41,16 +41,20 @@ const TopSectionContainer = styled.div`
   align-items: center;
   padding-top: 13%;
   z-index: 99;
+  
+  animation-name: ${breatheAnimation};
+  
+  animation-iteration-count: 1;
+
+  ${({ isForging }) => !isForging && `
+  animation-duration: 5s;
+  animation-iteration-count: 2;
+  animation-fill-mode: forwards;
+  `}
+
 `;
 
-// animation-name: ${breatheAnimation};
-  
 
-//   ${({ isForging }) => !isForging && `
-//   animation-duration: 5s;
-//   animation-iteration-count: 1;
-//   animation-fill-mode: forwards;
-//   `}
 
 const Logo = styled.h1`
   margin: 0;

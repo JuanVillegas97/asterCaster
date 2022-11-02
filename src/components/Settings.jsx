@@ -1,8 +1,47 @@
 import * as React from 'react';
 import Slider from '@mui/material/Slider';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { SliderPicker  } from 'react-color';
+import { Textures } from '../database/textures';
+
+export default function Settings({isForging, texture, setTexture, displacementScale, setDisplacementScale, aoMapIntensity, setAoMapIntensity, roughness, setRoughness, metalness, setMetalness, color, setColor}){
+    if(!isForging){
+    return <>
+    <SettingsContainer>
+        <SettingsItem>
+            <SettingsTitle>Displacement Scale</SettingsTitle>
+            <Slider  value={displacementScale} onChange={e => setDisplacementScale(e.target.value) } step={.03} min={-1.5} max={1.5}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <SettingsTitle>aoMapIntensity</SettingsTitle>
+            <Slider   value={aoMapIntensity} onChange={e => setAoMapIntensity(e.target.value) } step={1} min={0} max={10}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <SettingsTitle>Roughness</SettingsTitle>
+            <Slider   value={roughness} onChange={e => setRoughness(e.target.value) } step={.1} min={0} max={1}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <SettingsTitle>Metalness</SettingsTitle>
+            <Slider   value={metalness} onChange={e => setMetalness(e.target.value) } step={.1} min={0} max={1}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <SettingsTitle>Texture</SettingsTitle>
+            <Slider   value={texture} onChange={e => setTexture(e.target.value) } step={1} min={0} max={Textures.length-1}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <SettingsTitle>{color}</SettingsTitle>
+            <SliderPicker color={color} onChangeComplete={(color,e)=>{setColor(color.hex)}}/>
+        </SettingsItem >
+    </SettingsContainer>
+    </>
+    }else{
+        return <></>
+    }
+} 
+
+const SettingsTitle = styled.h2`
+
+`;
 
 const SettingsContainer = styled.div`
 display: flex;
@@ -23,27 +62,5 @@ background-color: rgba(23,36,46,0.4);
 margin: 10px;
 padding: 10px;
 font-size: 20px;
-
 border-radius: 25px;
 `;
-
-export default function Settings({isForging, roughness, setRoughness, color, setColor}) {
-    if( !isForging){
-    return <>
-    <SettingsContainer>
-        <SettingsItem>
-            <h1>Roughness</h1>
-            <Slider aria-label="Default" valueLabelDisplay="auto" value={roughness} onChange={e => setRoughness(e.target.value) } step={.1} min={0} max={1}/>  
-        </SettingsItem>
-        <SettingsItem>
-            <h1>{color}</h1>
-            <SliderPicker color={color} onChangeComplete={(color,e)=>{setColor(color.hex)}}/>
-        </SettingsItem >
-    </SettingsContainer>
-    </>
-    }else{
-        return <></>
-    }
-    
-
-}
