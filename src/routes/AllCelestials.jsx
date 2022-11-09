@@ -1,22 +1,23 @@
-import {  useLoader,Canvas } from "@react-three/fiber";
+import {  Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
-import { TextureLoader } from "three";
-import * as THREE from "three";
+import { useTexture } from "@react-three/drei";
+import { Textures } from "../database/textures";
+import {LinearEncoding} from "three";
+import { collection,getDocs,addDoc,updateDoc,deleteDoc,doc } from "firebase/firestore"
+import { db } from "../database/firebase-config"
+import React, {useState, useEffect} from "react";
+export const AllCelestials = () => {
+    const [remoteProps, setremoteProps] = useState([]) //From the data base
 
+    useEffect(() => {
+        const getCelestials = async () => {
+          const data = await getDocs(collection(db,"Celestial Bodies"))
+          setremoteProps(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        }
+        getCelestials()
+      }, []);
 
-import EarthDayMap from '../assets/textures/earth/8k_earth_daymap.jpg'
-import EarthNormalMap from '../assets/textures/earth/8k_earth_normal_map.jpg'
-import EarthSpecularMap from '../assets/textures/earth/8k_earth_specular_map.jpg'
-import EarthCloudsMap from '../assets/textures/earth/8k_earth_clouds.jpg'
-
-
-export const AllCelestials = ({celestialProps}) => {
-    const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
-    TextureLoader,
-    [EarthDayMap, EarthNormalMap, EarthSpecularMap, EarthCloudsMap])
-
-    return (
-        <>
+    return <>
         <Canvas>
         <ambientLight intensity={1} />
         <Stars
@@ -31,29 +32,19 @@ export const AllCelestials = ({celestialProps}) => {
         rotateSpeed={0.4}
         />
         {/* Change the index for the id */}
-        {celestialProps.map((celestial, index)=>{
-        const {position, scale} = celestial
+        {remoteProps.map((celestial, index)=>{
+
         return (
-            <group key={index}>
-            <mesh  position={position} scale={0.3} >
-                <sphereGeometry args={[1.005, 32, 32]}/>
-                <meshPhongMaterial 
-                    map={cloudsMap} opacity={0.4} depthWrite={true} transparent={true} side={THREE.DoubleSide}
-                />
-            </mesh>
-            <mesh  position={position} scale={0.3}>
-                <sphereGeometry args={[1, 32, 32]} />
-                <meshPhongMaterial specularMap={specularMap} />
+            <mesh  key={index} position={[0,0,0]} scale={0.3} >
+                <sphereGeometry args={[1, 264, 264]} />
+                <meshPhongMaterial opacity={1} />
                 <meshStandardMaterial
-                    map={colorMap} normalMap={normalMap} metalness={0.4} roughness={0.7}
                 />
             </mesh>
-            </group>
             )
         })}
         </Canvas>
         </>
-    );
 }
 
 

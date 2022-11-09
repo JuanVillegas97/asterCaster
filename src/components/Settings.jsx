@@ -6,8 +6,14 @@ import { Textures } from '../database/textures';
 import Button from '@mui/material/Button';
 import { Link } from "react-router-dom"
 
-export const Settings =({localProps, setLocalProps}) =>{
-    const {name, texture, displacementScale, aoMapIntensity, roughness, metalness, color} = localProps
+export const Settings =({celestialBodyTextures, localProps, setLocalProps}) =>{
+    const {name, txrIdx, displacementScale, aoMapIntensity, roughness, metalness, color, scale, position} = localProps
+    
+    const createCelestial = async () => {
+        setLocalProps( { ...localProps, texture: celestialBodyTextures.current})
+      }
+
+    console.log(console.log(localProps))
     const handleChange = e => {
         const {name, value} = e.target
         setLocalProps( { ...localProps, [name]: value} )
@@ -17,7 +23,7 @@ export const Settings =({localProps, setLocalProps}) =>{
     <SettingsContainer>
         <SettingsItem>
             <SettingsTitle>Displacement Scale</SettingsTitle>
-            <Slider   color="warning" name="displacementScale" value={displacementScale} onChange={handleChange} step={.03} min={-1.5} max={1.5}/>  
+            <Slider   color="secondary" name="displacementScale" value={displacementScale} onChange={handleChange} step={.03} min={-1.5} max={1.5}/>  
         </SettingsItem>
         <SettingsItem>
             <SettingsTitle>Ambient Occlusion</SettingsTitle>
@@ -33,10 +39,14 @@ export const Settings =({localProps, setLocalProps}) =>{
         </SettingsItem>
         <SettingsItem>
             <SettingsTitle>Texture</SettingsTitle>
-            <Slider   name="texture" value={texture} onChange={handleChange} step={1} min={0} max={Textures.length-1}/>  
+            <Slider   name="txrIdx" value={txrIdx} onChange={handleChange} step={1} min={0} max={Textures.length-1}/>  
         </SettingsItem>
         <SettingsItem>
-        <Link to="/AllCelestials"><Button variant="outlined" sx={{m: 2}}>DONE</Button></Link>
+            <SettingsTitle>Scale</SettingsTitle>
+            <Slider   name="scale" value={scale} onChange={handleChange} step={.1} min={0} max={2}/>  
+        </SettingsItem>
+        <SettingsItem>
+            <Button onClick={createCelestial} variant="outlined" sx={{m: 3}}>DONE</Button>
         </SettingsItem>
 
         {/* <SettingsItem>
@@ -56,11 +66,11 @@ display: flex-wrapped;
 flex-wrap: wrap;
 flex-flow: column wrap;
 flex-direction: column;
-position: absolute;
-width: 400px;
-height: 700px;
-top: 80px;
-left: 600px;
+position: fixed;
+width: 30%;
+height: 80%;
+top: 10vh;
+right: 5vw;
 background-color: rgba(23,36,46,0.4);
 align-items: center;
 z-index: 99;
@@ -69,6 +79,8 @@ border-radius: 25px;
 
 const SettingsItem = styled.div`
 background-color: rgba(23,36,46,0.4);
+width: auto;
+height: 70px;
 text-align: center;
 color:white;
 flex: 1 1 80px;
