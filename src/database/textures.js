@@ -62,22 +62,6 @@ export const Textures = [
         normalMap: normalRockMap
     },
     {
-        map: EarthDayMap,
-        displacementMap: DisplacementRockMap,
-        aoMap: AORockMap,
-        roughnessMap: AORockMap,
-        metalnessMap: AORockMap,
-        normalMap: EarthNormalMap
-    },
-    {
-        map: GrassMap,
-        displacementMap: DisplacementGrassMap,
-        aoMap: AOGrassMap,
-        roughnessMap: roughnessGrassMap,
-        metalnessMap: normalGrassMap,
-        normalMap: normalGrassMap
-    },
-    {
         map: ConcreteMap,
         displacementMap: DisplacementConcreteMap,
         aoMap: AOConcreteMap,

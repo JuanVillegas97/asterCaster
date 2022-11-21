@@ -1,24 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"
 
-import styled, {keyframes} from "styled-components";
+import styled, {css, keyframes} from "styled-components";
 import Button from '@mui/material/Button';
 
 
 export const TopSection = () => {
+  const [doAnimate, setDoAnimate] = useState(false);
   return <>
-  <TopSectionContainer>
+  <TopSectionContainer animate={doAnimate}>
     <Logo>Aster Caster</Logo>
     <Slogan>Create you own astonomical objects</Slogan>
-      <Paragraph>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. In distinctio eos aspernatur eaque veritatis earum eum pariatur debitis neque repellendus provident, cum modi, rem tempora sequi, cupiditate voluptates reiciendis alias.
-      </Paragraph>
-      <Link to="/CelestialForge"><Button variant="outlined" sx={{mt: 5}}>gO</Button></Link>
-      </TopSectionContainer>
-    </>
+    <Paragraph>
+    Aster Caster is a web page developed under the React and Three.js libraries.
+    Here any fan of astronomy will feel amazed because they will be able to create their own completely personalized celestial body!
+    </Paragraph>
+    <Button onClick={() => setDoAnimate(true)} variant="outlined" sx={{mt: 5}}>gO</Button>
+  </TopSectionContainer>
+  </>
 }
 
+const flash = keyframes`
+  from {
+      opacity: 1;
+      z-index: 99;
+      }
+      to {
+      opacity: 0;
+      z-index: -15;
+      }
+`;
+
+
 const TopSectionContainer = styled.div`
+
+  animation: ${props =>
+  props.animate &&
+  css`
+    ${flash} 5s forwards 1
+  `};
+
   position: absolute;
   width: 100%;
   height: 100%;
@@ -29,7 +50,6 @@ const TopSectionContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 13%;
-  opacity: .8;
   z-index: 99;
 `;
 
