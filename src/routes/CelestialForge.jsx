@@ -3,12 +3,12 @@ import { Settings } from '../components/Settings'
 import React, { useRef, useState } from "react";
 import { useFrame, Canvas } from "@react-three/fiber";
 import { useTexture, Stars } from "@react-three/drei";
-import { animated } from '@react-spring/three'
 import {LinearEncoding} from "three";
 import { Textures } from "../database/textures";
+import { useSpring, animated, config } from "@react-spring/three";
 
 const initState = {
-  name: "uwu",
+  name: "",
   txrIdx: 0,
   displacementScale: 0,
   aoMapIntensity: 0,
@@ -20,7 +20,7 @@ const initState = {
 
 export const CelestialForge = () => {  
   const [localProps, setLocalProps] = useState(initState)
-
+  
   return <>
   <Canvas camera={{fov: 75, position: [0, 0, 0.8]}}>
     <Stars radius={300} depth={-20} count={20000} factor={7} saturation={0} fade={true} opacity={.5}/>
@@ -33,8 +33,13 @@ export const CelestialForge = () => {
 }
 
 function CelestialObject({localProps, setLocalProps}){
-  const {name, txrIdx, displacementScale, aoMapIntensity, roughness, metalness, color, scale, position} = localProps
-  
+  const {txrIdx, displacementScale, aoMapIntensity, roughness, metalness, color, scale} = localProps
+  const [active, setActive] = useState(false);
+
+  const { position } = useSpring({
+      position: active ? [-2, 0, -2] : [-1, 0, -1.5],
+      config: config.wobbly
+    });
   const celestialBodyTextures= useTexture({
       map: Textures[txrIdx].map,
       displacementMap: Textures[txrIdx].displacementMap,
@@ -54,8 +59,6 @@ function CelestialObject({localProps, setLocalProps}){
   });
   
 
-
-  
   return <>
   {/* <animated.mesh ref={thorusRef} position={[0, 0, -2]} scale={1}>
       <torusGeometry args={[1.2,.01,50,200]}  />
@@ -72,7 +75,7 @@ function CelestialObject({localProps, setLocalProps}){
       />
   </animated.mesh> */}
   {/* onClick={() => setActive(!active)}HERE */}
-  <animated.mesh   ref={earthRef} scale={scale} position={[-1, 0, -2]}>
+  <animated.mesh   ref={earthRef} scale={scale} position={position} onClick={()=>{setActive(!active)}}>
       <sphereGeometry args={[1, 128, 128]} />
       <meshPhongMaterial opacity={1} />
       <meshStandardMaterial

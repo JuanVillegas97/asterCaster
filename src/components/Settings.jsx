@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import { addDoc, collection,getDocs } from "firebase/firestore"
 import { db } from "../database/firebase-config"
 import TextField from '@mui/material/TextField';
+
 export const Settings =({localProps, setLocalProps}) =>{
     const {name, txrIdx, displacementScale, aoMapIntensity, roughness, metalness, color, scale, position} = localProps
     
@@ -24,7 +25,7 @@ export const Settings =({localProps, setLocalProps}) =>{
     <SettingsContainer>
         <SettingsItem>
             <h2>Name of the planet</h2>
-            <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+            <TextField  name="name" value={name} onChange={handleChange} sx={{ input: { color: 'white' },mb: 1, color:'success'}}   label="" variant="outlined"  />
         </SettingsItem>
         <SettingsItem>
             <h2>Displacement Scale</h2>
@@ -59,35 +60,32 @@ export const Settings =({localProps, setLocalProps}) =>{
 
 
 const SettingsContainer = styled.div`
-position: fixed;
-width: auto;
-height: auto;
-
-display: flex-wrapped;
-flex-wrap: wrap;
-flex-flow: column wrap;
+display: flex;
 flex-direction: column;
+width: 400px;
+height: 700px;
+position: fixed;
+overflow-x: hidden;
+overflow-y: auto;
 
-top: 10vh;
-right: 5vw;
+top: 5%;
+right: 10%;
 
-background-color: rgba(23,36,46,0.4);
 align-items: center;
 z-index: 99;
 border-radius: 25px;
-`;
+background-color: rgba(23,36,46,.5);
 
+`;
 
 const SettingsItem = styled.div`
-background-color: rgba(23,36,46,0.4);
-width: 35vw;
-height: 10vh;
+background-color: rgba(23,36,46,.8);
+width: 95%;
+height: auto;
 text-align: center;
 color:white;
-flex: 1 1 80px;
 margin: 5px;
-padding: 15x;
-font-size: 20px;
+font-size: 15px;
+
 border-radius: 25px;
 `;
-

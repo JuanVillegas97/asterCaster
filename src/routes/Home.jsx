@@ -44,7 +44,7 @@ function Earth(){
     const { scale } = useSpring({
         scale: active ? 3 : 4,
         config: config.wobbly
-      });
+    });
     
     return <>
         <animated.mesh   scale={scale} ref={cloudsRef}  position={[0, 0, -6]}   >
